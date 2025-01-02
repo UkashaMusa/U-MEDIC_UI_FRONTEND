@@ -19,7 +19,6 @@ const Appointement = () => {
 
   const getAvailableSlot = async () => {
     setDocSlot([]);
-    // Getting the current date
     let today = new Date();
 
     for (let i = 0; i < 7; i++) {
@@ -47,11 +46,25 @@ const Appointement = () => {
           hour12: true,
         });
 
-        // Add slots to arrays
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+        let day = currentDate.getDate()
+        let month = currentDate.getMonth() + 1
+        let year = currentDate.getFullYear()
+
+        const slotDate = `${day}-${month}-${year}`
+        const slotTime = formattedTime
+
+        const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true
+
+        if (isSlotAvailable) {
+          // Add slots to arrays
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+
+        }
+
+
 
         // Incrementing the time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 30);
@@ -63,34 +76,56 @@ const Appointement = () => {
 
   const bookAppointment = async () => {
     if (!token) {
-      toast.warn('Login to book appointment')
-      return navigate('/login')
+      toast.warn('Login to book an appointment');
+      return navigate('/login');
     }
 
     try {
-      const date = docSlot[slotIndex][0].datetime
-      let day = date.getDate()
-      let month = date.getMonth() + 1
-      let year = date.getFullYear()
-
-      const slotDate = day + "_" + month + "_" + year
-
-      const { data } = await axios.post(`${backendUrl}/api/user/book-appointment`, { docId, slotDate, slotTime }, { headers: { token } })
-      if (data.success) {
-        toast.success(data.message)
-        getDoctorsData()
-        navigate('/my-appointment')
-      } else {
-        toast.error(data.message)
+      // Validate `docSlot` and `slotIndex`
+      if (!docSlot.length || !docSlot[slotIndex]) {
+        toast.error('Invalid or unavailable slot data');
+        return;
       }
-      //
 
+      // Ensure `slotTime` is selected
+      if (!slotTime) {
+        toast.error('Please select a time slot');
+        return;
+      }
+
+      // Extract date details
+      const date = docSlot[slotIndex][0]?.datetime;
+      if (!date) {
+        toast.error('Invalid slot date');
+        return;
+      }
+
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // Months are 0-based
+      const year = date.getFullYear();
+      const slotDate = `${day}-${month}-${year}`;
+
+      // API call
+      const response = await axios.post(
+        `${backendUrl}/api/user/book-appointment`,
+        { docId, slotDate, slotTime },
+        { headers: { token } }
+      );
+
+      if (response?.data?.success) {
+        toast.success(response.data.message);
+        getDoctorsData(); // Refresh doctors' data
+        navigate('/my-appointment'); // Redirect to appointments page
+      } else {
+        // Handle unsuccessful booking
+        const errorMessage = response?.data?.message || 'Slot booking failed';
+        toast.error(errorMessage);
+      }
     } catch (error) {
-      console.log(error)
-      toast.error(error.message)
-
+      console.error('Error booking appointment:', error);
+      toast.error(error.response?.data?.message || 'Something went wrong');
     }
-  }
+  };
 
 
   const fetchDocInfo = async () => {
