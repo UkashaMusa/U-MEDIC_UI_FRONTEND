@@ -6,7 +6,7 @@ import PayPalButtonsComponent from "../components/PayPalButtonsComponent"
 
 
 const MyAppointement = () => {
-  const { backendUrl, token, getDoctorsData } = useContext(AppContext)
+  const { backendUrl, token, getDoctorsData,formatDate } = useContext(AppContext)
   const [showPayPal, setShowPayPal] = useState(false);
 
   const [appointments, setAppointments] = useState([])
@@ -68,7 +68,7 @@ const MyAppointement = () => {
               <p className="text-[#464646] font-medium mt-1">Address:</p>
               <p>{items.docData.address.line1}</p>
               <p>{items.docData.address.line2}</p>
-              <p className=" mt-1"><span className="text-sm text-[#3C3C3C] font-medium">Date & Time: </span>{items.slotData} |  {items.slotTime}</p>
+              <p className=" mt-1"><span className="text-sm text-[#3C3C3C] font-medium">Date & Time: </span>{formatDate(items.slotData)} |  {items.slotTime}</p>
             </div>
             <div></div>
 
@@ -119,7 +119,6 @@ const MyAppointement = () => {
           </div>
         ))}
       </div>
-
     </div>
   )
 }

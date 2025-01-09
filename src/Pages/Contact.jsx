@@ -19,7 +19,7 @@ const Contact = () => {
           Tel: (+250) 792-402-035 <br />
           Email: umusa7677@gmail.com
           </p>
-          <p className=' font-semibold text-lg text-gray-600'>CAREERS AT PRESCRIPTO</p>
+          <p className=' font-semibold text-lg text-gray-600'>CAREERS AT UMEDIC</p>
           <p className=' text-gray-500'>Learn more about our teams and job openings.</p>
           <Link to='https://www.careerjet.com/jobad/us057b63e6996723a696428bf1455ebee3' target='blank' className='border border-black px-8 py-4 text-sm hover:bg-black hover:text-white transition-all duration-500'>Explore Jobs</Link>
         </div>

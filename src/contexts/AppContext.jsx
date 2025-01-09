@@ -52,13 +52,29 @@ const AppContextProvider =(props)=>{
         }
     }
 
+    function formatDate(inputDate) {
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+    
+        // Split the input date into day, month, and year
+        const [day, month, year] = inputDate.split("-").map(Number);
+    
+        // Get the month name
+        const monthName = months[month - 1];
+    
+        // Return the formatted date
+        return `${day} ${monthName} ${year}`;
+    }
+
     const value ={
         doctors,getDoctorsData,
         currencySynbols,
         token,setToken,
         backendUrl,userData,
         setUserData,
-        loadUserProfileData
+        loadUserProfileData,formatDate
     }
 
     useEffect(()=>{
