@@ -1,0 +1,9 @@
+.paypal-btn {
+    display: none;
+}
+
+
+.button-paypal-btn:hover + .paypal-btn,
+.paypal-btn:hover {
+    display: block;
+}

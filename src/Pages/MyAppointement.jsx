@@ -3,11 +3,10 @@ import { AppContext } from '../contexts/AppContext'
 import { toast } from "react-toastify"
 import axios from "axios"
 import PayPalButtonsComponent from "../components/PayPalButtonsComponent"
-
+import '../paypal.css';
 
 const MyAppointement = () => {
   const { backendUrl, token, getDoctorsData,formatDate } = useContext(AppContext)
-  const [showPayPal, setShowPayPal] = useState(false);
 
   const [appointments, setAppointments] = useState([])
 
@@ -75,22 +74,23 @@ const MyAppointement = () => {
 
             <div className="flex flex-col gap-2 justify-end text-sm text-center relative">
               {!items.cancelled && items.payment && !items.isCompleted && <button className="sm:min-w-48 py-2 border rounded text-stone-500 by-indigo-50">paid</button>}
-              {/* PayPal Button (conditionally rendered) */}
-              {!items.cancelled && showPayPal && !items.isCompleted && (
-               <div className="relative">
-                  <PayPalButtonsComponent appointmentId={items._id} token={token} getUserAppointments={getUserAppointments} />
-                </div>
-                
-              )}
+            
 
               {/* Pay Online Button */}
               {!items.cancelled && !items.payment && !items.isCompleted && (
                 <button
-                  onClick={() => setShowPayPal(true)} // Show PayPal button when clicked
-                  className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300 group relative"
+                  // Show PayPal button when clicked 
+                  className="text-[#696969]  sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white button-paypal-btn transition-all  duration-300 group relative"
                 >
                   Pay Online
                 </button>
+              )}
+                {/* PayPal Button (conditionally rendered) && showPayPal */}
+                {!items.cancelled  && !items.isCompleted && (
+               <div className="absolute top-[-35%] bottom-100 paypal-btn ">
+                  <PayPalButtonsComponent  appointmentId={items._id} token={token} getUserAppointments={getUserAppointments} />
+                </div>
+                
               )}
 
               {/* Cancel Appointment Button */}
